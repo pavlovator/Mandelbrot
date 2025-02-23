@@ -3,15 +3,17 @@
 #include <cmath>
 #include <iostream>
 
+// use GLSL shader!!!
+Vector2 r_axis{-2.0f, 1.0f};
+Vector2 i_axis{-1.5f, 1.5f};
+const float stability_threshold = 2.0f;
+const float zoom_factor = 0.01f;
 
-const Vector2 r_axis{-2.0f, 1.0f};
-const Vector2 i_axis{-1.5f, 1.5f};
-const float threshold = 2.0f;
 
 bool isStable(Vector2& C) {
     Vector2 zn{0.0f, 0.0f};
     Vector2 zn_1{0.0f, 0.0f};
-    const int iterations = 10;
+    const int iterations = 20;
     
     // can optimize this if zn is smaller then 2 get out of cycle prematurely
     for (int i=0; i<iterations; i++) {
@@ -23,11 +25,11 @@ bool isStable(Vector2& C) {
         };
         zn_1 = Vector2Add(square_zn, C);
         zn = zn_1;
-        if (Vector2Length(zn) > threshold) {
+        if (Vector2Length(zn) > stability_threshold) {
             return false;
         }
     }
-    if (Vector2Length(zn) > threshold) {
+    if (Vector2Length(zn) > stability_threshold) {
         return false;
     } 
     return true;
@@ -61,6 +63,30 @@ int main() {
     // Simulation Loop
     while (!WindowShouldClose()) {
         // 1. Event Handling
+        if (IsKeyDown(KEY_PAGE_DOWN)) {
+            r_axis.x *= (1-zoom_factor);
+            r_axis.y *= (1-zoom_factor);
+            i_axis.x *= (1-zoom_factor);
+            i_axis.y *= (1-zoom_factor);
+
+        } else if (IsKeyDown(KEY_PAGE_UP)) {
+            r_axis.x *= (1+zoom_factor);
+            r_axis.y *= (1+zoom_factor);
+            i_axis.x *= (1+zoom_factor);
+            i_axis.y *= (1+zoom_factor);
+        } else if (IsKeyDown(KEY_RIGHT)) {
+            r_axis.x += zoom_factor;
+            r_axis.y += zoom_factor;
+        } else if (IsKeyDown(KEY_LEFT)) {
+            r_axis.x -= zoom_factor;
+            r_axis.y -= zoom_factor;
+        } else if (IsKeyDown(KEY_UP)) {
+            i_axis.x -= zoom_factor;
+            i_axis.y -= zoom_factor;
+        }  else if (IsKeyDown(KEY_DOWN)) {
+            i_axis.x += zoom_factor;
+            i_axis.y += zoom_factor;
+        } 
 
         // 2. Updating State
         
