@@ -3,6 +3,9 @@
 #include <cmath>
 #include <iostream>
 
+#define RAYGUI_IMPLEMENTATION
+#include "raygui.h"  
+
 #if defined(PLATFORM_DESKTOP)
     #define GLSL_VERSION            330
 #else   // PLATFORM_ANDROID, PLATFORM_WEB
@@ -28,6 +31,7 @@ int main() {
     SetShaderValue(shader, i_offset_loc, i_offset, SHADER_UNIFORM_VEC2);
 
     SetTargetFPS(FPS);
+    bool active = false;
 
     // Simulation Loop
     while (!WindowShouldClose()) {
@@ -51,8 +55,6 @@ int main() {
         i_offset[0] += zoom;
         i_offset[1] -= zoom;
 
-
-
         // 2. Updating State
         SetShaderValue(shader, r_offset_loc, r_offset, SHADER_UNIFORM_VEC2);
         SetShaderValue(shader, i_offset_loc, i_offset, SHADER_UNIFORM_VEC2);
@@ -60,11 +62,13 @@ int main() {
         // 3. Drawing Objects
         BeginDrawing();
 	        ClearBackground(WHITE);
-
             BeginShaderMode(shader);  // Begin using the shader
             DrawRectangle(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT, WHITE);  // Draw a full screen white rectangle
             EndShaderMode();  // End using the shader
-            DrawText(TextFormat("Target FPS: %i \nCurrent FPS: %i", FPS, GetFPS()), 20, 20, 30, RED);
+            DrawText(TextFormat("Target FPS: %i \nCurrent FPS: %i", FPS, GetFPS()), 20, 20, 30, BLUE);
+
+            // should i name them orbits?
+            int res = GuiToggle((Rectangle){0,0,40,30}, "Orbits", &active);
         EndDrawing();
     }    
 

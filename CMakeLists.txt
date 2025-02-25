@@ -9,13 +9,12 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 # Specify the source files
-set(SOURCES main.cpp)
+set(SOURCES src/main.cpp)
 
 # Add the Raylib package (You might need to set the path if Raylib is not installed globally)
 find_package(raylib REQUIRED)
 
-# Include directories for Raylib (if it's not installed globally)
-# include_directories(/path/to/raylib/include)
+include_directories(${CMAKE_SOURCE_DIR}/include)
 
 # Add the executable
 add_executable(mandelbrot ${SOURCES})
