@@ -10,14 +10,10 @@
 #endif
 
 
-Vector2 r_axis{-2.0f, 1.0f};
-Vector2 i_axis{-1.5f, 1.5f};
-float zoom_factor = 0.01f;
-
 int main() {
-    const int WINDOW_WIDTH = 800;
-    const int WINDOW_HEIGHT = 800;
-    int FPS = 30;
+    const float WINDOW_WIDTH = 1000.0f;
+    const float WINDOW_HEIGHT = 1000.0f;
+    int FPS = 60;
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Mandelbrot set");
     
     Shader shader = LoadShader(0, TextFormat("../shaders/mandelbrot.fs", GLSL_VERSION));
@@ -27,49 +23,39 @@ int main() {
     int r_offset_loc = GetShaderLocation(shader, "r_offset");
     int i_offset_loc = GetShaderLocation(shader, "i_offset");
 
+
     SetShaderValue(shader, r_offset_loc, r_offset, SHADER_UNIFORM_VEC2);
     SetShaderValue(shader, i_offset_loc, i_offset, SHADER_UNIFORM_VEC2);
 
     SetTargetFPS(FPS);
 
-
     // Simulation Loop
     while (!WindowShouldClose()) {
         // 1. Event Handling
-        if (IsKeyDown(KEY_PAGE_DOWN)) {
-            r_offset[0] -= zoom_factor;
-            r_offset[1] += zoom_factor;
-            i_offset[0] -= zoom_factor;
-            i_offset[1] += zoom_factor;
-        }
-        if (IsKeyDown(KEY_PAGE_UP)) {
-            r_offset[0] += zoom_factor;
-            r_offset[1] -= zoom_factor;
-            i_offset[0] += zoom_factor;
-            i_offset[1] -= zoom_factor;
-        }
-        if (IsKeyDown(KEY_RIGHT)) {
-            r_offset[0] += zoom_factor;
-            r_offset[1] += zoom_factor;
-        }
-        if (IsKeyDown(KEY_LEFT)) {
-            r_offset[0] -= zoom_factor;
-            r_offset[1] -= zoom_factor;
-        }
-        // glsl has 0,0 at bottom left 
-        if (IsKeyDown(KEY_UP)) {
-            i_offset[0] += zoom_factor;
-            i_offset[1] += zoom_factor;
-        }
-        if (IsKeyDown(KEY_DOWN)) {
-            i_offset[0] -= zoom_factor;
-            i_offset[1] -= zoom_factor;
-        }
 
-        SetShaderValue(shader, r_offset_loc, r_offset, SHADER_UNIFORM_VEC2);
-        SetShaderValue(shader, i_offset_loc, i_offset, SHADER_UNIFORM_VEC2);
+        if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
+            Vector2 mouse_delta = GetMouseDelta();
+            float r_translation = (mouse_delta.x/WINDOW_WIDTH)* abs(r_offset[0] - r_offset[1]);
+            float i_translation = (mouse_delta.y/WINDOW_HEIGHT)* abs(i_offset[0] - i_offset[1]);
+            // glsl has 0,0 at bottom left 
+            r_offset[0] -= r_translation;
+            r_offset[1] -= r_translation;
+            i_offset[0] += i_translation;
+            i_offset[1] += i_translation;
+        }
+        // 5 to move it faster ... probably make some sort of momentum
+        float wheel_move = GetMouseWheelMove()*100;
+        float zoom = (wheel_move/WINDOW_WIDTH)* abs(r_offset[0] - r_offset[1]);
+        r_offset[0] += zoom;
+        r_offset[1] -= zoom;
+        i_offset[0] += zoom;
+        i_offset[1] -= zoom;
+
+
 
         // 2. Updating State
+        SetShaderValue(shader, r_offset_loc, r_offset, SHADER_UNIFORM_VEC2);
+        SetShaderValue(shader, i_offset_loc, i_offset, SHADER_UNIFORM_VEC2);
         
         // 3. Drawing Objects
         BeginDrawing();
