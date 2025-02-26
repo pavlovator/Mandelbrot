@@ -1,7 +1,5 @@
 
 #include <raylib.h>
-#include <raymath.h>
-#include <cmath>
 #include <iostream>
 #include "simulation.hpp" 
 
@@ -10,7 +8,7 @@ int main() {
     const float WINDOW_HEIGHT = 1000.0f;
     int FPS = 60;
     InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Mandelbrot set");
-    Simulation sim(WINDOW_WIDTH, WINDOW_HEIGHT);
+    Simulation sim(WINDOW_WIDTH, WINDOW_HEIGHT, FPS);
 
     SetTargetFPS(FPS);
     // Simulation Loop
@@ -25,8 +23,6 @@ int main() {
         BeginDrawing();
 	        ClearBackground(WHITE);
             sim.draw();
-            DrawText(TextFormat("Target FPS: %i \nCurrent FPS: %i", FPS, GetFPS()), 20, 20, 30, BLUE);
-
         EndDrawing();
     }    
 

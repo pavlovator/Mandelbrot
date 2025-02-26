@@ -1,5 +1,5 @@
 #version 330 core
-
+precision highp float;
 // check
 // https://github.com/raysan5/raylib/blob/master/examples/shaders/shaders_julia_set.c
 // https://github.com/raysan5/raylib/blob/master/examples/shaders/resources/shaders/glsl330/julia_set.fs
