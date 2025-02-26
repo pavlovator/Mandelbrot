@@ -9,6 +9,7 @@
 
 uniform vec2 r_offset;
 uniform vec2 i_offset;
+uniform int iterations;
 
 out vec4 finalColor;
 
@@ -69,7 +70,6 @@ void main() {
     vec2 pix_coords = gl_FragCoord.xy;
     vec2 zn = vec2(0.0, 0.0);
     vec2 zn_1 = vec2(0.0, 0.0);
-    int iterations = 100;
     bool is_out = false;
 
     float WINDOW_WIDTH = 1000.0;
