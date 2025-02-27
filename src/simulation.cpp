@@ -67,13 +67,6 @@ std::vector<Vector2> Simulation::get_orbits() {
         ((pix_coords.x / width)*abs(r_offset[0] - r_offset[1]))+r_offset[0],
         ((1.0f - pix_coords.y / height)*abs(i_offset[0] - i_offset[1]))+i_offset[0]
     };
-    std::cout << "---" << std::endl;
-    std::cout << c.x << " c " << c.y << std::endl;    
-    std::cout << pix_coords.x << " pix_coords " << pix_coords.y << std::endl;        
-
-    std::cout << abs(r_offset[0] - r_offset[1]) << std::endl;
-    std::cout << abs(i_offset[0] - i_offset[1]) << std::endl;
-    std::cout << "---" << std::endl;
 
     Vector2 zn {0.0f, 0.0f};
     Vector2 zn_1 {0.0f, 0.0f};
