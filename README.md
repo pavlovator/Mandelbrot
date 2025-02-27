@@ -1,4 +1,4 @@
-# Manderblot
+# Mandelbrot set in raylib
 Simple C/C++ raylib implementation of Mandelbrot set.
 
 ## Controls
