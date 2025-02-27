@@ -2,9 +2,9 @@
 Simple C/C++ raylib implementation of Mandelbrot set.
 
 ## Controls
- * toggle button for render of orbit iterations
- * slider for number of iteration
- * mouse movement on complex plane and zoom
+ * toggle button: render orbit iterations
+ * slider: change number of iteration
+ * mouse: movement on complex plane and zoom
  
 ## Build
 ```
