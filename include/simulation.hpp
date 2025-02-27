@@ -36,9 +36,12 @@ public:
 private:
 
     // get vector of orbits from point c
-    std::vector<Vector2> get_orbits();
-    void draw_orbits();
-    void drawAxis();
+    std::vector<Vector2> getOrbits();
+    void drawOrbits();
+    void drawBorders();
+    void drawC();
+    Vector2 getC();
+    Vector2 xy2C(Vector2 pix_coords);
     
     float width;
     float height;

@@ -1,10 +1,11 @@
 #include "simulation.hpp"
 #include <cmath>
-
+#include <vector>
 #include <iostream>
+#include <raylib.h>
+#include "rlgl.h"
 #define RAYGUI_IMPLEMENTATION
 #include "raygui.h"  
-
 
 void Simulation::handleEvents() {
 
@@ -52,21 +53,19 @@ void Simulation::draw() {
     DrawText(TextFormat("Iter: %i ", iterations), 170, 920, 15, WHITE);
     DrawText(TextFormat("Target FPS: %i \nCurrent FPS: %i", fps, GetFPS()), 10, 950, 20, WHITE);
     GuiToggle((Rectangle){ 0, 0, 40, 30 }, "Orbits", &show_orbits);
-    drawAxis();
+    drawBorders();
     if (show_orbits) {
-        draw_orbits();
+        drawOrbits();
     }
+    drawC();
 }
 
-std::vector<Vector2> Simulation::get_orbits() {
+std::vector<Vector2> Simulation::getOrbits() {
     std::vector<Vector2> orbits;
     // compute what is this normalized ...
     Vector2 pix_coords = GetMousePosition();
     // normalize
-    Vector2 c {
-        ((pix_coords.x / width)*abs(r_offset[0] - r_offset[1]))+r_offset[0],
-        ((1.0f - pix_coords.y / height)*abs(i_offset[0] - i_offset[1]))+i_offset[0]
-    };
+    Vector2 c = getC();
 
     Vector2 zn {0.0f, 0.0f};
     Vector2 zn_1 {0.0f, 0.0f};
@@ -89,9 +88,9 @@ std::vector<Vector2> Simulation::get_orbits() {
     return orbits;
 }
 
-void Simulation::draw_orbits() {
+void Simulation::drawOrbits() {
     //chceme sedost ... ako indikator poradia
-    std::vector<Vector2> orbits = get_orbits();
+    std::vector<Vector2> orbits = getOrbits();
     // draw dots
     for (const Vector2& orb: orbits) {
         //std::cout << orb.x << " : " << orb.y << std::endl;
@@ -102,13 +101,27 @@ void Simulation::draw_orbits() {
     }
 }
 
-void Simulation::drawAxis() {
+void Simulation::drawBorders() {
     float w_2 = width / 2.0f;
     float h_2 = height / 2.0f;
+    DrawText(TextFormat("%.02f", r_offset[0]), 10, h_2+5, 20, WHITE);
+    DrawText(TextFormat("%.02f", r_offset[1]), width-50, h_2+5, 20, WHITE);
+    DrawText(TextFormat("%.02f", i_offset[0]), w_2+5, 0, 20, WHITE);
+    DrawText(TextFormat("%.02f", i_offset[1]), w_2+5, height-20, 20, WHITE);
+}
 
-    // draw r-axis
-    DrawLine(0, h_2, width, h_2, WHITE);
-    // draw i-axis
-    DrawLine(w_2, 0, w_2, height, WHITE);
+void Simulation::drawC() {
+    Vector2 C = getC();
+    DrawText(TextFormat("r: %f i: %f", C.x, C.y), 10, 890, 20, WHITE);
+}
 
+// return C given current x,y position of the mouse
+Vector2 Simulation::getC() {
+    return xy2C(GetMousePosition());
+}
+
+Vector2 Simulation::xy2C(Vector2 pix_coords) {
+    return {
+        ((pix_coords.x / width)*abs(r_offset[0] - r_offset[1]))+r_offset[0],
+        ((1.0f - pix_coords.y / height)*abs(i_offset[0] - i_offset[1]))+i_offset[0]}; 
 }
