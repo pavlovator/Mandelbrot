@@ -14,3 +14,4 @@ cmake .. && make
 
 ## ToDo
  * Zoom just crashes since float is used in the shader and no optimization was done to address that.
+ * Speed optimization in regards to points that are stable.
