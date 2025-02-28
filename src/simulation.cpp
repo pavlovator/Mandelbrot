@@ -4,9 +4,11 @@
 #include <iostream>
 #include <raylib.h>
 #include "rlgl.h"
-#define RAYGUI_IMPLEMENTATION
-#include "raygui.h"  
 
+extern "C"{
+    #define RAYGUI_IMPLEMENTATION 1
+    #include "raygui.h"  
+}
 void Simulation::handleEvents() {
 
     int result = GuiSliderBar((Rectangle){ 10, 920, 150, 20 }, "", NULL, &slider_value, 0, 1000);
@@ -69,8 +71,7 @@ std::vector<Vector2> Simulation::getOrbits() {
 
     Vector2 zn {0.0f, 0.0f};
     Vector2 zn_1 {0.0f, 0.0f};
-
-    for (int i=0; i<iterations; ++i) {
+    for (int i=0; i<fmin(iterations,250); ++i) {
         zn_1 = Vector2 {
             zn.x*zn.x - zn.y*zn.y + c.x,
             2.0f*zn.x*zn.y + c.y
